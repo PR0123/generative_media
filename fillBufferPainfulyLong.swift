@@ -35,14 +35,33 @@ let data = (0..<width*height).map{ _ in UInt8.random(in: 0...255)}
 while frameCount < totalFrames {
   if assetWriterInput.isReadyForMoreMediaData {
     let frameTime = CMTimeMake(value: Int64(frameCount), timescale: Int32(framesPerSecond))
-    if let baseAddress = CVPixelBufferGetBaseAddress (pixelBuffer) {
-        var buf = baseAddress.assumingMemoryBound(to: UInt8.self)
-        for i in 0..<width*height{
-            buf[i] = UInt8.random(in: 0...255)
-        }
-    }
-    assetWriterAdaptor.append(pixelBuffer, withPresentationTime: frameTime)
-    frameCount+=1
+    // Are these eight lines below the prime suspect for ineficiency?
+    //
+    // if let baseAddress = CVPixelBufferGetBaseAddress (pixelBuffer) {
+    //     var buf = baseAddress.assumingMemoryBound(to: UInt8.self)
+    //     for i in 0..<width*height{
+    //         buf[i] = UInt8.random(in: 0...255)
+    //     }
+    // }    
+    // assetWriterAdaptor.append(pixelBuffer, withPresentationTime: frameTime)
+    // frameCount+=1
+    //        
+    // If I'll take an example from Apple documentation, as previously suggested by Dirk-FU on https://developer.apple.com/forums/thread/720647,
+    // then I'll need to have random data already in AVAssetReaderOutput, which means moving initialization to AVAssetTrack, or further.
+    // But where exactly do this assigment: buf[i] = UInt8.random(in: 0...255), and MOST IMPORTANT how could it improve efficiency? 
+    // Should it even be initialised that way, as I asked on https://developer.apple.com/forums/thread/721231.
+    //
+    // Below are the lines and comments from Apple documentation
+    //
+    // Copy the next sample buffer from source media.
+    //    guard let nextSampleBuffer = copyNextSampleBufferToWrite() else {
+    //        // Mark the input as finished.
+    //        self.assetWriterInput.markAsFinished()
+    //        break
+    //    }
+    //    // Append the sample buffer to the input.
+    //    self.assetWriterInput.append(nextSampleBuffer)
+    //
   }
 }
 
