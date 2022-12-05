@@ -46,13 +46,13 @@ while frameCount < totalFrames {
     // assetWriterAdaptor.append(pixelBuffer, withPresentationTime: frameTime)
     // frameCount+=1
     //        
-    // If I'll take an example from Apple documentation, as previously suggested by Dirk-FU on https://developer.apple.com/forums/thread/720647,
-    // then I'll need to have random data already in AVAssetReaderOutput, which means moving initialization to AVAssetTrack, or further.
-    // But where exactly do this assigment: buf[i] = UInt8.random(in: 0...255), and MOST IMPORTANT how could it improve efficiency? 
-    // Should it even be initialised that way, as I asked on https://developer.apple.com/forums/thread/721231.
+    // If I take an example from Apple documentation, as previously suggested by Dirk-FU on https://developer.apple.com/forums/thread/720647,
+    // then I need to have random data already in AVAssetReaderOutput, which means moving initialization to AVAssetTrack, or further.
+    // I've got an answer to optimising initialization here: https://developer.apple.com/forums/thread/721231       
+    // So the only remaining part of the puzzle is what object should be initialized this way? 
+    // And how to wire it to AVAssetReaderOutput to use its copyNextSampleBuffer() as recommended?
     //
     // Below are the lines and comments from Apple documentation
-    //
     // Copy the next sample buffer from source media.
     //    guard let nextSampleBuffer = copyNextSampleBufferToWrite() else {
     //        // Mark the input as finished.
